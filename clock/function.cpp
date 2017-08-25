@@ -134,7 +134,7 @@ void Setclock()
 	
 }
 
-void Changeclock()
+void Changeclock()                                 //修改闹钟
 {
 	system("cls");
 	Printclocktime();
@@ -270,7 +270,7 @@ DWORD WINAPI Ring(LPVOID lpparameter)
 	mciSendString(TEXT("close ring"), NULL, 0, NULL);
 	return 2;
 }*/
-DWORD WINAPI Compareclock0(LPVOID lpparameter)
+DWORD WINAPI Compareclock0(LPVOID lpparameter)                              //进行时间比对并响铃
 {
 	SYSTEMTIME comtime, localtime;
 
@@ -419,8 +419,8 @@ DWORD WINAPI Compareclock3(LPVOID lpparameter)
 	}
 
 }
-DWORD WINAPI Compareclock4(LPVOID lpparameter)
-{
+DWORD WINAPI Compareclock4(LPVOID lpparameter)                                      //由于只有一个函数时多次创建新线程会导致某些错误，目前没有找到解决办法
+{                                                                                   //于是只能每个闹铃对应一个函数，创建线程时使用相应函数避免错误。
 	SYSTEMTIME comtime, localtime;
 
 
@@ -483,19 +483,19 @@ void Comparebegin()
 	    printf("闹钟已开始！\n");
 	else
 		return;
-	switch (count1)
+	switch (count1)                                                     //分支语句对应有几个闹钟就创建几个线程并且只会使用相应的函数创建相应的线程
 	{
 	case 1:
 		compare[0]=CreateThread(NULL, 0, Compareclock0, NULL, 0, NULL);
 
-		WaitForSingleObject(compare[0], INFINITE);
+		WaitForSingleObject(compare[0], INFINITE);                     //创建线程后等待线程结束
 		break;
 	case 2:
 		compare[0] = CreateThread(NULL, 0, Compareclock0, NULL, 0, NULL);
 		
 		compare[1] = CreateThread(NULL, 0, Compareclock1, NULL, 0, NULL);
 
-		WaitForSingleObject(compare[0], INFINITE);
+		WaitForSingleObject(compare[0], INFINITE);                    //创建多个线程时等待所有线程结束
 		WaitForSingleObject(compare[1], INFINITE);
 	
 		break;
